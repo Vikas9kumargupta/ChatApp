@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "669223040377",
+    "project_id": "chatapp-6bc94",
+    "storage_bucket": "chatapp-6bc94.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669223040377:android:3395467fa1cc332a25eba8",
+        "android_client_info": {
+          "package_name": "com.example.vikaschatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669223040377-gsa5u4a8l30giqjj2tat7ojlpcon76ba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKWTlMZb4QhcPNncn0DMBtIRGbvPmkNDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669223040377-gsa5u4a8l30giqjj2tat7ojlpcon76ba.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

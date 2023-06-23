@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Chat App</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="settings">Settings</string>
+    <string name="logout">LogOut</string>
+    <string name="you_are_already_registered">You are already Registered?||</string>
+    <string name="vikas_is_android_developer">Vikas is Android Developer</string>
+</resources>
