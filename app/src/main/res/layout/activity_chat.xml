@@ -27,6 +27,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
+        android:id="@+id/sendImage"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_action_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/chatRecyclerView" />
+
+    <Button
         android:id="@+id/sent"
         android:layout_width="36dp"
         android:layout_height="36dp"
@@ -42,10 +51,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/layout_sender_message"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/layout_sender_message" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

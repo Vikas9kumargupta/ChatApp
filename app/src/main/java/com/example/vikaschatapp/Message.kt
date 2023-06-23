@@ -1,15 +1,21 @@
 package com.example.vikaschatapp
 
+import android.net.Uri
+import java.sql.Timestamp
+
 class Message {
     var message: String? = null
     var senderId: String? = null
+    var imageUrl: String? = null
+    var timestamp: Long = System.currentTimeMillis()
 
-    constructor() {
+    constructor()
 
-    }
-
-    constructor(message: String?, senderUid: String?) {
+    constructor(message: String?, senderId: String?, imageUrl: String?) {
         this.message = message
-        this.senderId = senderUid
+        this.senderId = senderId
+        this.imageUrl = imageUrl
     }
 }
+
+
