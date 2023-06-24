@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 
-class MessageAdapter(val context: Context, val messageList : ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(private val context: Context, private val messageList : ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val ITEM_RECEIVE = 1;
-    val ITEM_SENT = 2;
+    private val ITEM_RECEIVE = 1;
+    private val ITEM_SENT = 2;
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if(viewType == ITEM_RECEIVE){
@@ -45,10 +45,13 @@ class MessageAdapter(val context: Context, val messageList : ArrayList<Message>)
 
         if (holder is SentViewHolder) {
             val viewHolder = holder as SentViewHolder
-            viewHolder.sentMessage.text = currentMessage.message
             viewHolder.sentImage.visibility = View.GONE
+            viewHolder.sentMessage.visibility = View.GONE
 
-            if (!currentMessage.imageUrl.isNullOrEmpty()) {
+            if (!currentMessage.message.isNullOrEmpty()) {
+                viewHolder.sentMessage.visibility = View.VISIBLE
+                viewHolder.sentMessage.text = currentMessage.message
+            } else if (!currentMessage.imageUrl.isNullOrEmpty()) {
                 viewHolder.sentImage.visibility = View.VISIBLE
                 Glide.with(context)
                     .load(currentMessage.imageUrl)
@@ -56,10 +59,13 @@ class MessageAdapter(val context: Context, val messageList : ArrayList<Message>)
             }
         } else if (holder is ReceiverViewHolder) {
             val viewHolder = holder as ReceiverViewHolder
-            viewHolder.receiveMessage.text = currentMessage.message
             viewHolder.receiveImage.visibility = View.GONE
+            viewHolder.receiveMessage.visibility = View.GONE
 
-            if (!currentMessage.imageUrl.isNullOrEmpty()) {
+            if (!currentMessage.message.isNullOrEmpty()) {
+                viewHolder.receiveMessage.visibility = View.VISIBLE
+                viewHolder.receiveMessage.text = currentMessage.message
+            } else if (!currentMessage.imageUrl.isNullOrEmpty()) {
                 viewHolder.receiveImage.visibility = View.VISIBLE
                 Glide.with(context)
                     .load(currentMessage.imageUrl)
@@ -68,14 +74,15 @@ class MessageAdapter(val context: Context, val messageList : ArrayList<Message>)
         }
     }
 
-    }
+
+}
 
     class SentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val sentMessage = itemView.findViewById<TextView>(R.id.txt_sent_message)
-        val sentImage = itemView.findViewById<ImageView>(R.id.img_sent_image)
+        val sentMessage: TextView = itemView.findViewById(R.id.txt_sent_message)
+        val sentImage: ImageView = itemView.findViewById(R.id.img_sent_image)
     }
 
     class ReceiverViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-        val receiveMessage = itemView.findViewById<TextView>(R.id.txt_receive_message)
-        val receiveImage = itemView.findViewById<ImageView>(R.id.img_receive_image)
+        val receiveMessage: TextView = itemView.findViewById(R.id.txt_receive_message)
+        val receiveImage: ImageView = itemView.findViewById(R.id.img_receive_image)
     }
