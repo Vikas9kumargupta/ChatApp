@@ -7,7 +7,6 @@ class Message {
     var message: String? = null
     var senderId: String? = null
     var imageUrl: String? = null
-    var timestamp: Long = System.currentTimeMillis()
 
     constructor()
 

@@ -1,5 +1,6 @@
 package com.example.vikaschatapp
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -9,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 
-class UserAdapter(private val context : Context, private val userList : ArrayList<User>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(private val context : Context, private var userList : ArrayList<User>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view : View = LayoutInflater.from(context).inflate(R.layout.user_layout, parent, false)
@@ -36,7 +37,14 @@ class UserAdapter(private val context : Context, private val userList : ArrayLis
     }
 
 
+
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textName = itemView.findViewById<TextView>(R.id.txt_name)
+        val textName: TextView = itemView.findViewById<TextView>(R.id.txt_name)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(newList: List<User>) {
+        userList = newList as ArrayList<User>
+        notifyDataSetChanged()
     }
 }

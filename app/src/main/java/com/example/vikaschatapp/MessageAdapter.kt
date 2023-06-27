@@ -1,29 +1,32 @@
 package com.example.vikaschatapp
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 
-class MessageAdapter(private val context: Context, private val messageList : ArrayList<Message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(private val context: Context, private val messageList : ArrayList<Message>)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val ITEM_RECEIVE = 1;
-    private val ITEM_SENT = 2;
+    private val ITEM_RECEIVE = 1
+    private val ITEM_SENT = 2
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if(viewType == ITEM_RECEIVE){
+        return if(viewType == ITEM_RECEIVE){
             //inflate receive
             val view: View = LayoutInflater.from(context).inflate(R.layout.layout_receiver_message,parent,false)
-            return ReceiverViewHolder(view)
+            ReceiverViewHolder(view)
         }else{
             //inflate sent
             val view: View = LayoutInflater.from(context).inflate(R.layout.layout_sender_message,parent,false)
-            return SentViewHolder(view)
+            SentViewHolder(view)
         }
     }
 
@@ -33,13 +36,14 @@ class MessageAdapter(private val context: Context, private val messageList : Arr
 
     override fun getItemViewType(position: Int): Int {
         val currentMessage = messageList[position]
-        if(FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.senderId)){
-            return ITEM_SENT
+        return if(FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.senderId)){
+            ITEM_SENT
         }else{
-            return ITEM_RECEIVE
+            ITEM_RECEIVE
         }
     }
 
+    val selectedItems: HashSet<Int> = HashSet()
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val currentMessage = messageList[position]
 
@@ -73,9 +77,8 @@ class MessageAdapter(private val context: Context, private val messageList : Arr
             }
         }
     }
-
-
 }
+
 
     class SentViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val sentMessage: TextView = itemView.findViewById(R.id.txt_sent_message)

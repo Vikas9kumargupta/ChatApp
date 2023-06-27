@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vikaschatapp.databinding.ActivityChatBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -25,11 +26,12 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageList : ArrayList<Message>
     private lateinit var storageReference: StorageReference
     private lateinit var mDbRef : DatabaseReference
+    private lateinit var onlineStatusMap: HashMap<String, Boolean>
 
     private val REQUEST_IMAGE_PICKER = 1
 
 
-    var receiverRoom : String? = null
+    private var receiverRoom : String? = null
     private var senderRoom: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,15 +39,11 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         mDbRef = FirebaseDatabase.getInstance().reference
         storageReference = FirebaseStorage.getInstance().reference
 
-
-
         val name = intent.getStringExtra("name")
         val uid = intent.getStringExtra("uid")
-
 
         supportActionBar!!.title = name
 
@@ -53,49 +51,42 @@ class ChatActivity : AppCompatActivity() {
             openImagePicker()
         }
 
+        onlineStatusMap = HashMap()
+
         val receiverUid = intent.getStringExtra("uid")
         val senderUid = FirebaseAuth.getInstance().currentUser!!.uid
 
         senderRoom = receiverUid + senderUid
-
         receiverRoom = senderUid + receiverUid
 
-
-
         messageList = ArrayList()
-        messageAdapter = MessageAdapter(this,messageList)
+        messageAdapter = MessageAdapter(this, messageList)
 
         binding.chatRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.chatRecyclerView.adapter = messageAdapter
 
         // logic for adding data to recycler View
-
         mDbRef.child("chats").child(senderRoom!!).child("messages")
             .addValueEventListener(object : ValueEventListener{
 
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onDataChange(snapshot: DataSnapshot) {
                     messageList.clear()
-
                     for(postSnapshot in snapshot.children){
-
                         val message = postSnapshot.getValue(Message::class.java)
                         messageList.add(message!!)
                     }
                     messageAdapter.notifyDataSetChanged()
                 }
-
                 override fun onCancelled(error: DatabaseError) {
                     Toast.makeText(this@ChatActivity,error.message, Toast.LENGTH_SHORT).show()
                 }
-
             })
 
         binding.sent.setOnClickListener {
             //logic to send the message to dataBase
             val message = binding.messageBox.text.toString()
             val messageObject = Message(message,senderUid,imageUrl = null)
-
 
             mDbRef.child("chats").child(senderRoom!!).child("messages").push()
                 .setValue(messageObject).addOnSuccessListener {
@@ -104,72 +95,11 @@ class ChatActivity : AppCompatActivity() {
                 }
             binding.messageBox.text?.clear()
         }
-
     }
-
     private fun openImagePicker() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, REQUEST_IMAGE_PICKER)
     }
-//    @SuppressLint("NotifyDataSetChanged")
-//    @Deprecated("Deprecated in Java")
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if (requestCode == REQUEST_IMAGE_PICKER && resultCode == RESULT_OK) {
-//            val selectedImageUri: Uri? = data?.data
-//            val imageUrl = selectedImageUri.toString()
-//            if (selectedImageUri != null) {
-//                // TODO: Upload the selected image to the server and obtain the image URL or identifier
-//
-//                // Example: Create a new message item with the image URL
-//                val message = Message(message = String(), imageUrl = selectedImageUri.toString(), senderId = String() )
-//
-//                // TODO: Add the message to the chat adapter and display it in the RecyclerView
-//                messageList.add(message)
-//                messageAdapter.notifyDataSetChanged()
-//            }
-//        }
-//    }
-
-//    @Deprecated("Deprecated in Java")
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if (requestCode == REQUEST_IMAGE_PICKER && resultCode == RESULT_OK) {
-//            val selectedImageUri: Uri? = data?.data
-//            if (selectedImageUri != null) {
-//                // Generate a unique filename for the image
-//                val filename = UUID.randomUUID().toString()
-//
-//                // Create a reference to the image file in Firebase Storage
-//                val imageRef = storageReference.child("images/$filename")
-//
-//                // Upload the image file to Firebase Storage
-//                val uploadTask = imageRef.putFile(selectedImageUri)
-//
-//                // Register a listener to track the upload progress and completion
-//                uploadTask.addOnCompleteListener { task ->
-//                    if (task.isSuccessful) {
-//                        // Image uploaded successfully, retrieve the download URL
-//                        imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-//                            // Create a new message item with the image URL
-//                            val imageUrl = downloadUrl.toString()
-//                            val message = Message(message = String(), imageUrl = selectedImageUri.toString(), senderId = String() )
-//
-//                            // Add the message to the chat adapter and display it in the RecyclerView
-//                            messageList.add(message)
-//                            messageAdapter.notifyDataSetChanged()
-//                        }
-//                    } else {
-//                        // Error uploading the image
-//                        Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            }
-//        }
-//    }
-
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -191,7 +121,7 @@ class ChatActivity : AppCompatActivity() {
                     // Image uploaded successfully, retrieve the download URL
                     storageRef.downloadUrl.addOnSuccessListener {
                         // Create a new message object with the image URL
-                        val message = Message(message = String(), imageUrl = selectedImageUri.toString(), senderId = String() )
+                        val message = Message(message = "", imageUrl = selectedImageUri.toString(), senderId = "")
 
                         // Add the message to the sender and receiver rooms
                         mDbRef.child("chats").child(senderRoom!!).child("messages").push().setValue(message)
@@ -210,7 +140,4 @@ class ChatActivity : AppCompatActivity() {
             }
         }
     }
-
-
-
 }
